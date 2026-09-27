@@ -1,0 +1,8 @@
+/**
+ * FORauto — shared UI stylesheet entry point.
+ *
+ * Re-exports the design tokens so a consumer only needs one import.
+ * The actual token values live in `@forauto/config/tokens.css`
+ * (source of truth: `docs/DESIGN.md` §4).
+ */
+@import "@forauto/config/tokens.css";

@@ -1,0 +1,34 @@
+{
+  "name": "forauto",
+  "version": "0.1.0",
+  "private": true,
+  "description": "FORauto — Automotive Services & Vehicle Solutions",
+  "license": "UNLICENSED",
+  "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:web": "npm run dev --workspace @forauto/web",
+    "dev:api": "npm run dev --workspace @forauto/api",
+    "build": "npm run build --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "migrate": "npm run migrate --workspace @forauto/api",
+    "migrate:status": "npm run migrate:status --workspace @forauto/api"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.14",
+    "@types/node": "22.20.4",
+    "typescript": "6.0.3",
+    "vitest": "5.0.2"
+  }
+}

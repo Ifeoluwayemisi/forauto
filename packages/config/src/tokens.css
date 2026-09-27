@@ -1,0 +1,118 @@
+/* ─────────────────────────────────────────────────────────────
+ * FORauto — Design Tokens
+ *
+ * Source of truth: docs/DESIGN.md
+ *
+ * PROVISIONAL: docs/DESIGN.md §4 and §6 give token *directions*
+ * and state that final values are locked during implementation.
+ * docs/ROADMAP.md §6 (Phase 1 — Brand & Experience) has not run yet.
+ * These values MUST be revisited when the brand is finalised.
+ *
+ * Consumers: Tailwind CSS v4 reads `@theme` at build time and
+ * generates the matching utilities (bg-charcoal, text-ink-muted,
+ * rounded-card, font-display, max-w-content, ...).
+ * ───────────────────────────────────────────────────────────── */
+
+@import "tailwindcss";
+
+@theme {
+  /* ── Colour ────────────────────────────────────────────────
+   * docs/DESIGN.md §4. Usage rule (§5): neutral foundation →
+   * strong typography → photography → accent. The accent is a
+   * signal, not wallpaper.
+   */
+
+  /* Surfaces */
+  --color-charcoal: #111111; /* near-black: nav, hero, footer, CTA */
+  --color-warm-white: #f7f5f0; /* primary light surface */
+  --color-stone: #e7e3db; /* secondary neutral: borders, cards */
+
+  /* Accent — used sparingly (docs/DESIGN.md §4) */
+  --color-amber: #e88a2a;
+
+  /* Text on light backgrounds */
+  --color-ink: #171717; /* primary */
+  --color-ink-secondary: #5f5b55; /* secondary */
+  --color-ink-muted: #8a857d; /* muted */
+
+  /* Text on dark backgrounds */
+  --color-bone: #f5f3ee; /* primary */
+  --color-bone-secondary: #b8b4ac; /* secondary */
+
+  /* ── Typography ────────────────────────────────────────────
+   * docs/DESIGN.md §6. `--font-manrope` / `--font-inter` are
+   * provided by next/font in apps/web/src/app/layout.tsx.
+   * The literal fallbacks keep the stack usable if webfonts fail.
+   */
+  --font-display: var(--font-manrope), "Manrope", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-body: var(--font-inter), "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", "Cascadia Mono", "Roboto Mono", Menlo, monospace;
+
+  /* ── Radius ────────────────────────────────────────────────
+   * docs/DESIGN.md §10. No pill-shaped SaaS styling.
+   */
+  --radius-control: 8px;
+  --radius-button: 9px;
+  --radius-card: 14px;
+  --radius-media: 18px;
+
+  /* ── Layout ────────────────────────────────────────────────
+   * docs/DESIGN.md §8. Centred content container, 1200–1320px.
+   */
+  --container-content: 1320px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+ * Base layer
+ * docs/DESIGN.md §6 (typography) and §38 (accessibility).
+ * ───────────────────────────────────────────────────────────── */
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  html {
+    /* Respect users who ask the OS to reduce motion.
+       Declared on the same element as the reduced-motion override below,
+       so the override can actually win the cascade.
+       docs/DESIGN.md §36, §38; AGENTS.md §31. */
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-warm-white);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    /*
+     * `!important` is required here, not incidental: this rule has to
+     * override component-level animation and transition durations that
+     * appear later in the cascade. Without it, `prefers-reduced-motion`
+     * would silently do nothing — an accessibility regression
+     * (AGENTS.md §31, §33).
+     */
+    *,
+    *::before,
+    *::after {
+      /* biome-ignore lint/complexity/noImportantStyles: a reduced-motion reset must override component transitions */
+      animation-duration: 0.01ms !important;
+      /* biome-ignore lint/complexity/noImportantStyles: a reduced-motion reset must override component transitions */
+      animation-iteration-count: 1 !important;
+      /* biome-ignore lint/complexity/noImportantStyles: a reduced-motion reset must override component transitions */
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* Visible focus for keyboard users only (docs/DESIGN.md §38). */
+  :focus-visible {
+    outline: 2px solid var(--color-amber);
+    outline-offset: 2px;
+  }
+}
